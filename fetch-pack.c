@@ -671,6 +671,7 @@ static void mark_complete_and_common_ref(struct fetch_negotiator *negotiator,
 
 	trace2_region_enter("fetch-pack", "mark_complete_and_common_ref", NULL);
 
+	enable_fscache(1);
 	for (ref = *refs; ref; ref = ref->next) {
 		struct object *o;
 
@@ -692,6 +693,7 @@ static void mark_complete_and_common_ref(struct fetch_negotiator *negotiator,
 				cutoff = commit->date;
 		}
 	}
+	enable_fscache(0);
 
 	/*
 	 * This block marks all local refs as COMPLETE, and then
