@@ -45,11 +45,11 @@ jobs:
     - name: Test
       run: |
         & ${{runner.workspace}}\git-sdk-64-minimal\usr\bin\bash.exe -lc @"
-          test -f artifacts.tar.gz || {
+          test -f ../artifacts.tar.gz || {
             echo No test artifacts found\; skipping >&2
             exit 0
           }
-          tar xf artifacts.tar.gz || exit 1
+          tar xf ../artifacts.tar.gz || exit 1
 
           ci/run-test-slice.sh ${{matrix.nr}} 10 || {
             ci/print-test-failures.sh
