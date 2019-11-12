@@ -19,7 +19,7 @@ async function run() {
       return;
     }
     // TODO: obtain this URL dynamically
-    const url = 'https://artprodcus3.artifacts.visualstudio.com/Ac037a06e-1e3b-41a1-b045-ce593a4d2ab4/f3317b6a-fa67-40d4-9a33-b652e06943df/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL0dpdC1mb3ItV2luZG93cy9wcm9qZWN0SWQvZjMzMTdiNmEtZmE2Ny00MGQ0LTlhMzMtYjY1MmUwNjk0M2RmL2J1aWxkSWQvNDU1NDIvYXJ0aWZhY3ROYW1lL2dpdC1zZGstNjQtbWluaW1hbA2/content?format=zip';
+    const url = 'https://dev.azure.com/Git-for-Windows/f3317b6a-fa67-40d4-9a33-b652e06943df/_apis/build/builds/45513/artifacts?artifactName=git-sdk-64-minimal&api-version=5.1&%24format=zip';
     //core.startGroup('Downloading git-sdk-64-mininal...');
     //const zip = await toolcache.downloadTool(url);
     //core.endGroup();
