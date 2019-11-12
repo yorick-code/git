@@ -2680,7 +2680,7 @@ static int remove_dir_recurse(struct strbuf *path, int flag, int *kept_up)
 				 * wanted anyway
 				 */
 				continue;
-			/* fall thru */
+			/* fall through */
 		} else if (S_ISDIR(st.st_mode)) {
 			if (!remove_dir_recurse(path, flag, &kept_down))
 				continue; /* happy */
