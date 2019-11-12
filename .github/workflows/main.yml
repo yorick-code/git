@@ -10,12 +10,10 @@ jobs:
     - uses: ./setup-git-sdk-64-minimal
     - name: Build
       run: |
-        dir ${{runner.workspace}}\git-sdk-64-minimal
-        dir ${{runner.workspace}}\git-sdk-64-minimal\usr
-        dir ${{runner.workspace}}\git-sdk-64-minimal\usr\bin
-        & ${{runner.workspace}}\git-sdk-64-minimal\usr\bin\bash.exe -lc @"
-        printf '%s\n' /git-sdk-64-minimal/ >>.git/info/exclude
-
+        dir ${{runner.workspace}}\git-sdk-64-minimal\git-sdk-64-minimal
+        dir ${{runner.workspace}}\git-sdk-64-minimal\git-sdk-64-minimal\usr
+        dir ${{runner.workspace}}\git-sdk-64-minimal\git-sdk-64-minimal\usr\bin
+        & ${{runner.workspace}}\git-sdk-64-minimal\git-sdk-64-minimal\usr\bin\bash.exe -lc @"
           ci/make-test-artifacts.sh artifacts
         "@
         if (!$?) { exit(1) }
@@ -45,15 +43,12 @@ jobs:
         path: ${{runner.workspace}}
     - name: Test
       run: |
-        & ${{runner.workspace}}\git-sdk-64-minimal\usr\bin\bash.exe -lc @"
+        & ${{runner.workspace}}\git-sdk-64-minimal\git-sdk-64-minimal\usr\bin\bash.exe -lc @"
           test -f artifacts.tar.gz || {
             echo No test artifacts found\; skipping >&2
             exit 0
           }
           tar xf artifacts.tar.gz || exit 1
-
-          # Let Git ignore the SDK
-          printf '%s\n' /git-sdk-64-minimal/ >>.git/info/exclude
 
           ci/run-test-slice.sh ${{matrix.nr}} 10 || {
             ci/print-test-failures.sh
