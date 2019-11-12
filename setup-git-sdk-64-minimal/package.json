@@ -1,0 +1,27 @@
+{
+  "name": "setup-git-sdk-64-minimal",
+  "version": "1.0.0",
+  "description": "git-sdk-64-minimal GitHub Action",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/git-for-windows/git"
+  },
+  "keywords": [
+    "GitForWindows",
+    "GitHub",
+    "Actions"
+  ],
+  "author": "dscho",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/git-for-windows/git/issues"
+  },
+  "homepage": "https://gitforwindows.org/",
+  "dependencies": {
+    "@actions/core": "^1.2.0",
+    "@actions/exec": "^1.0.1",
+    "@actions/tool-cache": "1.1.2",
+    "unzipper": "^0.10.5"
+  }
+}
