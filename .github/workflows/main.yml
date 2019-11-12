@@ -14,6 +14,7 @@ jobs:
         dir ${{runner.workspace}}\git-sdk-64-minimal\usr
         dir ${{runner.workspace}}\git-sdk-64-minimal\usr\bin
         & ${{runner.workspace}}\git-sdk-64-minimal\usr\bin\bash.exe -lc @"
+          env
           ci/make-test-artifacts.sh artifacts
         "@
         if (!$?) { exit(1) }
