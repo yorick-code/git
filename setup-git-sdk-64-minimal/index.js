@@ -1,9 +1,9 @@
-import * as core from '@actions/core';
-import * as io from '@actions/io';
-import * as toolcache from '@actions/tool-cache';
-import * as path from 'path';
-import * as fs from 'fs';
-import * as unzipper from 'unzipper';
+const core = require('@actions/core');
+const io = require('@actions/io');
+const toolcache = require('@actions/tool-cache');
+const path = require('path');
+const fs = require('fs');
+const unzipper = require('unzipper');
 
 async function run() {
   try {
@@ -19,10 +19,12 @@ async function run() {
     }
     // TODO: obtain this URL dynamically
     const url = 'https://artifacts.dev.azure.com/Git-for-Windows/f3317b6a-fa67-40d4-9a33-b652e06943df/_apis/artifact/cGlwZWxpbmVhcnRpZmFjdDovL0dpdC1mb3ItV2luZG93cy9wcm9qZWN0SWQvZjMzMTdiNmEtZmE2Ny00MGQ0LTlhMzMtYjY1MmUwNjk0M2RmL2J1aWxkSWQvNDU1NDIvYXJ0aWZhY3ROYW1lL2dpdC1zZGstNjQtbWluaW1hbA2/content?format=zip';
+    core.startGroup('Downloading git-sdk-64-mininal...');
     const zip = await toolcache.downloadTool(url);
+    core.endGroup();
 
-    core.startGroup('Unzipping git-sdk-64-mininal...');
     const path = core.getInput('path');
+    core.startGroup(`Unzipping git-sdk-64-minimal to ${path}...`);
     await io.mkdirP(path);
     fs.createReadStream(zip).pipe(unzipper.Extract({path: path}));
     core.endGroup();
