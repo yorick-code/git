@@ -1,0 +1,81 @@
+name: CI/PR
+
+on: [push]
+
+jobs:
+  windows-build:
+    runs-on: [windows-latest]
+    steps:
+    - name: Download git-sdk-64-minimal
+      run: |
+        $urlbase = "https://dev.azure.com/git-for-windows/git/_apis/build/builds"
+        $id = ((Invoke-WebRequest -UseBasicParsing "${urlbase}?definitions=22&statusFilter=completed&resultFilter=succeeded&`$top=1").content | ConvertFrom-JSON).value[0].id
+        $downloadUrl = ((Invoke-WebRequest -UseBasicParsing "${urlbase}/$id/artifacts").content | ConvertFrom-JSON).value[1].resource.downloadUrl
+        (New-Object Net.WebClient).DownloadFile($downloadUrl,"git-sdk-64-minimal.zip")
+        Expand-Archive git-sdk-64-minimal.zip -DestinationPath . -Force
+        Remove-Item git-sdk-64-minimal.zip
+        Remove-Item git-sdk-64-minimal\.git
+        dir
+    - name: Upload git-sdk-64-minimal as artifact
+      uses: actions/upload-artifact@v1
+      with:
+        name: git-sdk-64-minimal
+        path: git-sdk-64-minimal
+    - uses: actions/checkout@v1
+    - name: Build
+      run: |
+        dir ..\git-sdk-64-minimal
+        dir ..\git-sdk-64-minimal\usr
+        dir ..\git-sdk-64-minimal\usr\bin
+        & ..\git-sdk-64-minimal\usr\bin\bash.exe -lc @"
+        printf '%s\n' /git-sdk-64-minimal/ >>.git/info/exclude
+
+          ci/make-test-artifacts.sh artifacts
+        "@
+        if (!$?) { exit(1) }
+      env:
+        HOME: ${{runner.workspace}}
+        MSYSTEM: MINGW64
+        DEVELOPER: 1
+        NO_PERL: 1
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: windows-artifacts
+        path: artifacts
+  windows-test:
+    runs-on: [windows-latest]
+    needs: [windows-build]
+    strategy:
+      matrix:
+        nr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+    - name: Download git-sdk-64-minimal
+      uses: actions/download-artifact@v1
+      with:
+        name: git-sdk-64-minimal
+        path: git-sdk-64-minimal
+    - name: Download build artifacts
+      uses: actions/download-artifact@v1
+      with:
+        name: windows-artifacts
+        path: ${{runner.workspace}}
+    - uses: actions/checkout@v1
+    - name: Test
+      run: |
+        & ..\git-sdk-64-minimal\usr\bin\bash.exe -lc @"
+          test -f artifacts.tar.gz || {
+            echo No test artifacts found\; skipping >&2
+            exit 0
+          }
+          tar xf artifacts.tar.gz || exit 1
+
+          # Let Git ignore the SDK
+          printf '%s\n' /git-sdk-64-minimal/ >>.git/info/exclude
+
+          ci/run-test-slice.sh ${{matrix.nr}} 10 || {
+            ci/print-test-failures.sh
+            exit 1
+          }
+        "@
+        if (!$?) { exit(1) }
