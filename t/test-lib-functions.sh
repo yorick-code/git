@@ -1016,9 +1016,8 @@ test_must_be_empty () {
 # provided first, that its other two parameters refer to different
 # revisions.
 test_cmp_rev () {
-	local op wrong_result
-	op='='
-	wrong_result='different'
+	local op='=' wrong_result=different
+
 	if test $# -ge 1 && test "x$1" = 'x!'
 	then
 	    op='!='
