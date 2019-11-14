@@ -63,6 +63,16 @@ This is designed to be as compact as possible.
 
 	       <full commit message>
 
+* 'reference'
+
+	  <abbrev hash> (<title line>, <short author date>)
++
+This format is useful for referring to other commits when writing a new
+commit message. It uses the following canned user format:
+`%C(auto)%h (%s, %as)`. This means it will not respect options that
+change the output format such as `--date` `--no-abbrev-commit`, and
+`--walk-reflogs`.
+
 * 'email'
 
 	  From <hash> <date>
