@@ -351,7 +351,8 @@ static ssize_t list_and_choose(struct add_i_state *s,
 				}
 			}
 
-			p[sep] = '\0';
+			if (p[sep])
+				p[sep++] = '\0';
 			if (from < 0) {
 				from = find_unique(p, items);
 				if (from >= 0)
@@ -377,7 +378,7 @@ static ssize_t list_and_choose(struct add_i_state *s,
 					res += choose ? +1 : -1;
 				}
 
-			p += sep + 1;
+			p += sep;
 		}
 
 		if ((immediate && res != LIST_AND_CHOOSE_ERROR) ||
